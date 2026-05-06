@@ -1,0 +1,12 @@
+diff --git a/server/Makefile.in b/server/Makefile.in
+index 84a6bd74d9d..2f81c8bbf5c 100644
+--- a/server/Makefile.in
++++ b/server/Makefile.in
+@@ -12,6 +12,7 @@ SOURCES = \
+ 	debugger.c \
+ 	device.c \
+ 	directory.c \
++	esync.c \
+ 	event.c \
+ 	fd.c \
+ 	file.c \

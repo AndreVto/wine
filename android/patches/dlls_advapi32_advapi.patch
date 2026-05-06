@@ -1,0 +1,64 @@
+diff --git a/dlls/advapi32/advapi.c b/dlls/advapi32/advapi.c
+index 2284e92b263..7f231f3b857 100644
+--- a/dlls/advapi32/advapi.c
++++ b/dlls/advapi32/advapi.c
+@@ -39,19 +39,26 @@
+
+ WINE_DEFAULT_DEBUG_CHANNEL(advapi);
+
++static const char wineuserA[] = {'x','u','s','e','r',0};
++static const WCHAR wineuserW[] = L"xuser";
++
+ /******************************************************************************
+  * GetUserNameA [ADVAPI32.@]
+  */
+ BOOL WINAPI GetUserNameA( LPSTR name, LPDWORD size )
+ {
+-    DWORD len = GetEnvironmentVariableA( "WINEUSERNAME", name, *size );
+-    BOOL ret;
++    DWORD required = sizeof(wineuserA); // includes null terminator
+
+-    if (!len) return FALSE;
+-    if ((ret = (len < *size))) len++;
+-    else SetLastError( ERROR_INSUFFICIENT_BUFFER );
+-    *size = len;
+-    return ret;
++    if (*size < required)
++    {
++        *size = required;
++        SetLastError(ERROR_INSUFFICIENT_BUFFER);
++        return FALSE;
++    }
++
++    memcpy(name, wineuserA, required);
++    *size = required;
++    return TRUE;
+ }
+
+ /******************************************************************************
+@@ -59,14 +66,18 @@ BOOL WINAPI GetUserNameA( LPSTR name, LPDWORD size )
+  */
+ BOOL WINAPI GetUserNameW( LPWSTR name, LPDWORD size )
+ {
+-    DWORD len = GetEnvironmentVariableW( L"WINEUSERNAME", name, *size );
+-    BOOL ret;
++    DWORD required = sizeof(wineuserW); // includes null terminator
+
+-    if (!len) return FALSE;
+-    if ((ret = (len < *size))) len++;
+-    else SetLastError( ERROR_INSUFFICIENT_BUFFER );
+-    *size = len;
+-    return ret;
++    if (*size < required)
++    {
++        *size = required;
++        SetLastError(ERROR_INSUFFICIENT_BUFFER);
++        return FALSE;
++    }
++
++    memcpy(name, wineuserW, required);
++    *size = required;
++    return TRUE;
+ }
+
+ /******************************************************************************

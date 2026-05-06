@@ -1,0 +1,12 @@
+diff --git a/dlls/ntdll/Makefile.in b/dlls/ntdll/Makefile.in
+index 022583aa20e..0558ae5b5d8 100644
+--- a/dlls/ntdll/Makefile.in
++++ b/dlls/ntdll/Makefile.in
+@@ -53,6 +53,7 @@ SOURCES = \
+ 	unix/debug.c \
+ 	unix/env.c \
+ 	unix/file.c \
++	unix/esync.c \
+ 	unix/loader.c \
+ 	unix/loadorder.c \
+ 	unix/process.c \
