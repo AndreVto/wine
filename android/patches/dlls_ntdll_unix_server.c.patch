@@ -1,0 +1,35 @@
+diff --git a/dlls/ntdll/unix/server.c b/dlls/ntdll/unix/server.c
+index 24f2c20fbb1..f642a4f44e2 100644
+--- a/dlls/ntdll/unix/server.c
++++ b/dlls/ntdll/unix/server.c
+@@ -1349,9 +1349,16 @@ static int setup_config_dir(void)
+
+     if (!mkdir( "dosdevices", 0777 ))
+     {
++#ifdef __ANDROID__
++        mkdir( "drive_d", 0777 );
++        symlink( "../drive_c", "dosdevices/c:" );
++        symlink( "/storage/emulated/0/", "dosdevices/d:" );
++        symlink( "/data/data/app.gamenative/files/imagefs/", "dosdevices/z:" );
++#else
+         mkdir( "drive_c", 0777 );
+         symlink( "../drive_c", "dosdevices/c:" );
+         symlink( "/", "dosdevices/z:" );
++#endif
+     }
+     else if (errno != EEXIST) fatal_perror( "cannot create %s/dosdevices", config_dir );
+
+@@ -1682,7 +1689,12 @@ size_t server_init_process(void)
+             info_size         = reply->info_size;
+             server_start_time = reply->server_start;
+             supported_machines_count = wine_server_reply_size( reply ) / sizeof(*supported_machines);
+-            if (reply->inproc_device)
++			if (reply->inproc_device == ESYNC_USED_BY_SERVER)
++            {
++                int shm_fd = wine_server_receive_fd( &handle );
++                esync_init( shm_fd );
++            }
++			else if (reply->inproc_device)
+             {
+                 inproc_device_fd = wine_server_receive_fd( &handle );
+                 assert( handle == reply->inproc_device );
