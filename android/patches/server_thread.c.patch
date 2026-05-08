@@ -5,7 +5,7 @@ index 7207f918400..babe3f05ad7 100644
 @@ -1773,7 +1773,12 @@ DECL_HANDLER(init_first_thread)
      set_reply_data( supported_machines,
                      min( supported_machines_count * sizeof(unsigned short), get_reply_max_size() ));
-
+ 
 -    if ((fd = get_inproc_device_fd()) >= 0)
 +    if (do_esync())
 +    {
