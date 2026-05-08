@@ -141,64 +141,80 @@ do
     echo "Applying patches..."
 
     PATCHES=(
-      # core patches
-      "dlls_advapi32_advapi.patch"
+	  # core patches
+	  "dlls_advapi32_advapi.patch"
 
-      # dns
-      "dlls_dnsapi_libresolv.c.patch"
-      "dlls_dnsapi_record.c.patch"
+	  # dns
+	  "dlls_dnsapi_libresolv.c.patch"
+	  "dlls_dnsapi_record.c.patch"
 
-      # midi
-      "dlls_midimap_Makefile.in.patch"
-      "dlls_midimap_midimap.c.patch"
+	  # midi
+	  "dlls_midimap_Makefile.in.patch"
+	  "dlls_midimap_midimap.c.patch"
 
-      # nsiproxy
-      "dlls_nsiproxy.sys_ip.c.patch"
-      "dlls_nsiproxy.sys_ndis.c.patch"
+	  # nsiproxy
+	  "dlls_nsiproxy.sys_ip.c.patch"
+	  "dlls_nsiproxy.sys_ndis.c.patch"
 
-      # ntdll
-      "dlls_ntdll_Makefile.in.patch"
-      "dlls_ntdll_unix_loader.c.patch"
-      "dlls_ntdll_unix_server.c.patch"
-      "dlls_ntdll_unix_sync.c.patch"
-      "dlls_ntdll_unix_virtual.c.patch"
+	  # ntdll
+	  "dlls_ntdll_Makefile.in.patch"
+	  "dlls_ntdll_loader.c.patch"
+	  "dlls_ntdll_ntdll.spec.patch"
+	  "dlls_ntdll_ntdll_misc.h.patch"
+	  "dlls_ntdll_signal_arm64.c.patch"
+	  "dlls_ntdll_signal_arm64ec.c.patch"
+	  "dlls_ntdll_signal_x86_64.c.patch"
+	  "dlls_ntdll_unix_loader.c.patch"
+	  "dlls_ntdll_unix_process.c.patch"
+	  "dlls_ntdll_unix_server.c.patch"
+	  "dlls_ntdll_unix_sync.c.patch"
+	  "dlls_ntdll_unix_virtual.c.patch"
+	  "dlls_ntdll_unwind.h.patch"
 
-      # user32 / clipboard
-      "dlls_user32_Makefile.in.patch"
-      "dlls_win32u_clipboard.c.patch"
+	  # user32 / clipboard
+	  "dlls_user32_Makefile.in.patch"
+	  "dlls_win32u_clipboard.c.patch"
 
-      # drivers
-      "dlls_winebus.sys_bus_sdl.c.patch"
-      "dlls_winepulse.drv_pulse.c.patch"
+	  # drivers
+	  "dlls_winebus.sys_bus_sdl.c.patch"
+	  "dlls_winepulse.drv_pulse.c.patch"
 
-      # winex11
-      "dlls_winex11.drv_bitblt.c.patch"
-      "dlls_winex11.drv_keyboard.c.patch"
-      "dlls_winex11.drv_opengl.c.patch"
-      "dlls_winex11.drv_window.c.patch"
-      "dlls_winex11.drv_x11drv.h.patch"
-      "dlls_winex11.drv_x11drv_main.c.patch"
+	  # winex11
+	  "dlls_winex11.drv_bitblt.c.patch"
+	  "dlls_winex11.drv_keyboard.c.patch"
+	  "dlls_winex11.drv_opengl.c.patch"
+	  "dlls_winex11.drv_window.c.patch"
+	  "dlls_winex11.drv_x11drv.h.patch"
+	  "dlls_winex11.drv_x11drv_main.c.patch"
 
-      # wow64
-      "dlls_wow64_syscall.c.patch"
+	  # wow64
+	  "dlls_wow64_process.c.patch"
+	  "dlls_wow64_syscall.c.patch"
+	  "dlls_wow64_virtual.c.patch"
+	  "dlls_wow64_wow64.spec.patch"
 
-      # loader
-      "loader_preloader.c.patch"
+	  # include
+	  "include_winnt.h.patch"
+	  "include_winternl.h.patch"
 
-      # programs
-      "programs_explorer_desktop.c.patch"
-      "programs_wineboot_wineboot.c.patch"
-      "programs_winebrowser_Makefile.in.patch"
-      "programs_winebrowser_main.c.patch"
+	  # loader
+	  "loader_preloader.c.patch"
+	  "loader_wine_inf.in.patch"
 
-      # server
-      "server_Makefile.in.patch"
-      "server_inproc_sync.c.patch"
-      "server_main.c.patch"
-      # "server_protocol.def.patch"
-      "server_thread.c.patch"
-      "server_unicode.c.patch"
-    )
+	  # programs
+	  "programs_explorer_desktop.c.patch"
+	  "programs_wineboot_wineboot.c.patch"
+	  "programs_winebrowser_Makefile.in.patch"
+	  "programs_winebrowser_main.c.patch"
+
+	  # server
+	  "server_Makefile.in.patch"
+	  "server_inproc_sync.c.patch"
+	  "server_main.c.patch"
+	  # "server_protocol.def.patch"
+	  "server_thread.c.patch"
+	  "server_unicode.c.patch"
+	)
 
     for patch in "${PATCHES[@]}"; do
       echo "----------------------------------------"

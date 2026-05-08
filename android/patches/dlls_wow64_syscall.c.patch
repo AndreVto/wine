@@ -1,11 +1,11 @@
 diff --git a/dlls/wow64/syscall.c b/dlls/wow64/syscall.c
-index 9fdef4a6d9e..169093d4e9b 100644
+index 9fdef4a6d9e..dda79bf950a 100644
 --- a/dlls/wow64/syscall.c
 +++ b/dlls/wow64/syscall.c
 @@ -734,6 +734,28 @@ static HMODULE load_64bit_module( const WCHAR *name )
      return module;
  }
-
+ 
 +/**********************************************************************
 + *           wow64GetEnvironmentVariableW
 + */
@@ -28,13 +28,13 @@ index 9fdef4a6d9e..169093d4e9b 100644
 +    val[len] = 0;
 +    return len;
 +}
-
+ 
  /**********************************************************************
   *           get_cpu_dll_name
-@@ -748,6 +770,12 @@ static const WCHAR *get_cpu_dll_name(void)
+@@ -748,11 +770,17 @@ static const WCHAR *get_cpu_dll_name(void)
      HANDLE key;
      ULONG size;
-
+ 
 +    WCHAR *cpu_dll = (WCHAR*)buffer;
 +    UINT res;
 +    if ((res = wow64GetEnvironmentVariableW( L"HODLL", cpu_dll, ARRAY_SIZE(buffer))) &&
@@ -44,3 +44,9 @@ index 9fdef4a6d9e..169093d4e9b 100644
      switch (current_machine)
      {
      case IMAGE_FILE_MACHINE_I386:
+         RtlInitUnicodeString( &nameW, L"\\Registry\\Machine\\Software\\Microsoft\\Wow64\\x86" );
+-        ret = (native_machine == IMAGE_FILE_MACHINE_ARM64 ? L"xtajit.dll" : L"wow64cpu.dll");
++        ret = (native_machine == IMAGE_FILE_MACHINE_ARM64 ? L"libwow64fex.dll" : L"wow64cpu.dll");
+         break;
+     case IMAGE_FILE_MACHINE_ARMNT:
+         RtlInitUnicodeString( &nameW, L"\\Registry\\Machine\\Software\\Microsoft\\Wow64\\arm" );
