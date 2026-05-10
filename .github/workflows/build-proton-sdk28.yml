@@ -167,7 +167,6 @@ jobs:
             sed -i "s|$CURRENT_USER|xuser|g" "$WINEPREFIX/user.reg"
             sed -i "s|$CURRENT_USER|xuser|g" "$WINEPREFIX/system.reg"
           fi
-          rm -f "$WINEPREFIX/dosdevices/c:" "$WINEPREFIX/dosdevices/z:"
           
           # Download file list
           wget -q https://raw.githubusercontent.com/AndreVto/bionic-prefix-files/wine-11.x/prefix-files-${ARCH}.txt
