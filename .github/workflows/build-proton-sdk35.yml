@@ -150,7 +150,7 @@ jobs:
           
           sudo apt-get install -y wine64
           
-          WINE_DATA="$HOME/termuxfs/${ARCH}/data/data/com.termux/files/opt/wine/share/wine"
+          WINE_DATA="$HOME/termuxfs/aarch64/data/data/com.termux/files/opt/wine/share/wine"
           
           # Run wineboot using system wine but with our wine.inf
           export WINEPREFIX=$HOME/wine-prefix/.wine
