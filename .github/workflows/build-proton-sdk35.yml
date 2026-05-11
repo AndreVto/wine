@@ -144,21 +144,36 @@ jobs:
             bash build-scripts/build-step-arm64ec.sh --enable-16kb-pages --install
           fi
       
+      - name: Install QEMU user-mode (aarch64 only)
+        if: matrix.arch == 'aarch64'
+        run: |
+          sudo apt-get install -y qemu-user qemu-user-binfmt
+          sudo update-binfmts --enable qemu-aarch64
+
       - name: Generate prefixPack.txz for ${{ matrix.arch }}
         run: |
           ARCH="${{ matrix.arch }}"
+          if [ "$ARCH" == "x86_64" ]; then
+            WINE_BINARY="$HOME/termuxfs/x86_64/data/data/com.termux/files/opt/wine/lib/wine/x86_64-unix/wine"
+            WINE_SERVER="$HOME/termuxfs/x86_64/data/data/com.termux/files/opt/wine/bin/wineserver"
+            WINE_DATA="$HOME/termuxfs/x86_64/data/data/com.termux/files/opt/wine/share/wine"
+            QEMU_PREFIX=""
+          else
+            WINE_BINARY="$HOME/termuxfs/aarch64/data/data/com.termux/files/opt/wine/lib/wine/aarch64-unix/wine"
+            WINE_SERVER="$HOME/termuxfs/aarch64/data/data/com.termux/files/opt/wine/bin/wineserver"
+            WINE_DATA="$HOME/termuxfs/aarch64/data/data/com.termux/files/opt/wine/share/wine"
+            QEMU_PREFIX="qemu-aarch64 -L $HOME/termuxfs/aarch64/data/data/com.termux/files/usr"
+          fi
           
-          sudo apt-get install -y wine64
-          
-          WINE_DATA="$HOME/termuxfs/aarch64/data/data/com.termux/files/opt/wine/share/wine"
-          
-          # Run wineboot using system wine but with our wine.inf
+          # Run wineboot
           export WINEPREFIX=$HOME/wine-prefix/.wine
           export WINEARCH=win64
           export WINEDATADIR=$WINE_DATA
           mkdir -p $WINEPREFIX
-          wineboot --init
-          wineserver -w
+          $QEMU_PREFIX $WINE_SERVER &
+          sleep 2
+          $QEMU_PREFIX $WINE_BINARY wineboot --init
+          $QEMU_PREFIX $WINE_SERVER -w
           
           # Fix username
           CURRENT_USER=$(whoami)
@@ -172,10 +187,12 @@ jobs:
           # Download file list
           wget -q https://raw.githubusercontent.com/AndreVto/bionic-prefix-files/wine-11.x/prefix-files-${ARCH}.txt
           
-          # Stage files from list
+          # Stage exact files from list
           STAGING=$HOME/prefix-staging
           mkdir -p $STAGING
           while IFS=' ' read -r type path; do
+            # path is relative to staging root e.g. ".wine/drive_c/..."
+            # source strips the leading .wine/ since WINEPREFIX already points there
             src="$WINEPREFIX/${path#.wine/}"
             dst="$STAGING/$path"
             if [ "$type" = "d" ]; then
